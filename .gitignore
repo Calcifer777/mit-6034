@@ -1,4 +1,4 @@
-  *.pyc
+  lab1/*.pyc
   *.aux
   *.fdb_latexmk
   *.fls
