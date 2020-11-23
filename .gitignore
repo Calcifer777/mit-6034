@@ -1,0 +1,9 @@
+  *.pyc
+  *.aux
+  *.fdb_latexmk
+  *.fls
+  *.log
+  notes.pdf
+  **/*.synctex.gz
+  notes.tex
+
