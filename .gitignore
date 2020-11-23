@@ -1,9 +1,10 @@
-  lab1/*.pyc
-  *.aux
-  *.fdb_latexmk
-  *.fls
-  *.log
-  notes.pdf
-  **/*.synctex.gz
-  notes.tex
+ .pytest_cache
+ **/*.pyc
+ *.aux
+ *.fdb_latexmk
+ *.fls
+ *.log
+ notes.pdf
+ **/*.synctex.gz
+ notes.tex
 
