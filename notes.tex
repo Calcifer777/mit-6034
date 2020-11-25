@@ -96,10 +96,6 @@ and the corresponding node is called a \textbf{goal node}.
 Nodes are said to be \textbf{open} until they can be expanded,
 whereupon they become \textbf{closed}.
 
-\subsection{British Museum Search}
-
-Search each possible path (no loops) and then evaluate the best one.
-
 \subsection{Blind methods}
 
 \subsubsection{Depth-first Search}
@@ -226,12 +222,121 @@ partially developed tree.
     partial paths that appear to be good at all levels
   \item Best-first search is good when there is a natural measure 
     of the goal distance and a good partial path may look like
-    a bad option before more promising partial paths are played out
+    a bad option before more promising partial paths are played
+    out
 \end{itemize}
 
 \section{Nets and Optimal Search}
 
+\subsection{British Museum procedure}
 
+Find all possible paths and select the best one from them.
+
+\subsection{Branch and Bound}
+
+\begin{itemize}
+  \item Form a one-element queue consisting of a zero-length path 
+    that contains only the root node
+  \item Until the first path in the queue terminates at the 
+    goal node or the queue is empth:
+    \begin{itemize}
+      \item Remove the first path from the queue; create new paths 
+        by extending the first path to all the neighbors
+        of the terminal node
+      \item Reject all new paths with loops
+      \item add the remaining new paths, if any, to the queue
+      \item Sort the entire queue by path length with 
+        least-cost paths in front
+    \end{itemize}
+  \item If the goal node is gound, annouce success; otherwise, 
+    annouce failure
+\end{itemize}
+
+\subsection{Branch and Bound with lower-bound estimate}
+
+\begin{itemize}
+  \item Form a one-element queue consisting of a zero-length path 
+    that contains only the root node
+  \item Until the first path in the queue terminates at the 
+    goal node or the queue is empth:
+    \begin{itemize}
+      \item Remove the first path from the queue; create new paths 
+        by extending the first path to all the neighbors
+        of the terminal node
+      \item Reject all new paths with loops
+      \item Add the remaining new paths, if any, to the queue
+      \item Sort the entire queue by \textbf{the sum of the path
+        length and a lower-bound estimate of the cost
+        remaining, with least-cost paths in front}
+    \end{itemize}
+  \item If the goal node is gound, annouce success; otherwise, 
+    annouce failure
+\end{itemize}
+
+\subsection{Branch and Bound with dynamic programming}
+
+\begin{itemize}
+  \item Form a one-element queue consisting of a zero-length path 
+    that contains only the root node
+  \item Until the first path in the queue terminates at the 
+    goal node or the queue is empth:
+    \begin{itemize}
+      \item Remove the first path from the queue; create new paths 
+        by extending the first path to all the neighbors
+        of the terminal node
+      \item Reject all new paths with loops
+      \item Add the remaining new paths, if any, to the queue
+      \item \textbf{if two or more paths reach a common node,
+        delete all those paths except the one that reaches the
+        common node with the minimum cost}
+      \item Sort the entire queue by \textbf{the sum of the path
+        length with least-cost paths in front}
+    \end{itemize}
+  \item If the goal node is gound, annouce success; otherwise, 
+    annouce failure
+\end{itemize}
+
+\subsection{A* procedure - Branch and bound with Underestimates
+and Dynamic Programming}
+
+\begin{itemize}
+  \item Form a one-element queue consisting of a zero-length path 
+    that contains only the root node
+  \item Until the first path in the queue terminates at the 
+    goal node or the queue is empth:
+    \begin{itemize}
+      \item Remove the first path from the queue; create new paths 
+        by extending the first path to all the neighbors
+        of the terminal node
+      \item Reject all new paths with loops
+      \item Add the remaining new paths, if any, to the queue
+      \item \textbf{if two or more paths reach a common node,
+        delete all those paths except the one that reaches the
+        common node with the minimum cost}
+      \item Sort the entire queue by \textbf{the sum of the path
+        length and a lower-bound estimate of the cost
+        remaining, with least-cost paths in front}
+    \end{itemize}
+  \item If the goal node is gound, annouce success; otherwise, 
+    annouce failure
+\end{itemize}
+
+\subsection{Which optimal search method is good for me?}
+\begin{itemize}
+  \item The British Museum procedure is good only when the 
+    search tree is small
+  \item Branch-and-bound search is good when the tree is big 
+    and bad paths turn distinctly bad quickly
+  \item Branch-and-bound search with a guess is good when 
+    there is a good lower-bound estimate of the distance
+    remaining to the goal
+  \item Dynamic programming is good when many paths convers
+    on the same place
+  \item The A* procedure is good when both branch-and-bound 
+    search with a guess and dynamic programming are good
+\end{itemize}
+
+\section{Trees and Adversarial Search}
 
 
 
