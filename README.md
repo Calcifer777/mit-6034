@@ -1,5 +1,8 @@
 # mit-6034
 
+## Course website
+
+<https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-034-artificial-intelligence-fall-2010/>
 
 ## Run python 2.6
 
