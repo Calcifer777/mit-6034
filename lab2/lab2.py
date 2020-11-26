@@ -7,32 +7,37 @@
 
 # 1: True or false - Hill Climbing search is guaranteed to find a solution
 #    if there is a solution
-ANSWER1 = None
+ANSWER1 = False
 
 # 2: True or false - Best-first search will give an optimal search result
 #    (shortest path length).
 #    (If you don't know what we mean by best-first search, refer to
 #     http://courses.csail.mit.edu/6.034f/ai3/ch4.pdf (page 13 of the pdf).)
-ANSWER2 = None
+ANSWER2 = False
 
 # 3: True or false - Best-first search and hill climbing make use of
 #    heuristic values of nodes.
-ANSWER3 = None
+ANSWER3 = True
 
 # 4: True or false - A* uses an extended-nodes set.
-ANSWER4 = None
+ANSWER4 = True
 
 # 5: True or false - Breadth first search is guaranteed to return a path
 #    with the shortest number of nodes.
-ANSWER5 = None
+ANSWER5 = True
 
 # 6: True or false - The regular branch and bound uses heuristic values
 #    to speed up the search for an optimal path.
-ANSWER6 = None
+ANSWER6 = False
 
 # Import the Graph data structure from 'search.py'
 # Refer to search.py for documentation
 from search import Graph
+import logging
+import time
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 ## Optional Warm-up: BFS and DFS
 # If you implement these, the offline tester will test them.
@@ -40,19 +45,87 @@ from search import Graph
 # The online tester will not test them.
 
 def bfs(graph, start, goal):
-    raise NotImplementedError
+    """
+    Args:
+        graph (Graph)
+        start (str)
+        goal (str)
+    """
+    queue = [start]
+    step = 0
+    logging.info("BFS START: %s" % start)
+    logging.info("BFS GOAL: %s" % goal)
+    while len(queue) > 0 and queue[0][-1] != goal:
+        logging.info("BFS step: %s" % step)
+        logging.info("Queue: [%s]" % ", ".join(queue))
+        head_path = queue.pop(0)
+        logging.info("Tail node: [%s]" % head_path[-1])
+        connected_nodes = graph.get_connected_nodes(head_path[-1])
+        logging.info("Connected nodes: [%s]" % ", ".join(connected_nodes))
+        new_paths = [head_path + node for node in
+                     connected_nodes if node not in head_path]
+        # queue += new_paths
+        queue.extend(new_paths)
+        step += 1
+    logging.info("Path found: %s" % queue[0])
+    return queue[0]
 
 ## Once you have completed the breadth-first search,
 ## this part should be very simple to complete.
 def dfs(graph, start, goal):
-    raise NotImplementedError
+    queue = [start]
+    step = 0
+    logging.info("\n\n\nDFS START: %s" % start)
+    logging.info("DFS GOAL: %s" % goal)
+    while len(queue) > 0 and queue[0][-1] != goal:
+        logging.info("DFS step: %s" % step)
+        logging.info("Queue: [%s]" % ", ".join(queue))
+        head_path = queue.pop(0)
+        logging.info("Current path: %s" % head_path)
+        logging.info("Tail node: [%s]" % head_path[-1])
+        connected_nodes = graph.get_connected_nodes(head_path[-1])
+        logging.info("Connected nodes: [%s]" % ", ".join(connected_nodes))
+        new_paths = [head_path + node for node in
+                     connected_nodes if node not in head_path]
+        queue = new_paths + queue
+        step += 1
+    logging.info("Path found: %s" % queue[0])
+    return queue[0]
 
 
-## Now we're going to add some heuristics into the search.  
+## Now we're going to add some heuristics into the search.
 ## Remember that hill-climbing is a modified version of depth-first search.
 ## Search direction should be towards lower heuristic values to the goal.
 def hill_climbing(graph, start, goal):
-    raise NotImplementedError
+    queue = [start]
+    step = 0
+    logging.info("Hill Climbing START: %s" % start)
+    logging.info("Hill Climbing GOAL: %s" % goal)
+    
+    def hill_sort(nodes):
+        if len(nodes) <= 1:
+            return nodes
+        n0 = nodes[0]
+        h0 = graph.get_heuristic(n0, goal)
+        closer = [n for n in nodes[1:] if graph.get_heuristic(n, goal) <= h0]
+        further = [n for n in nodes[1:] if graph.get_heuristic(n, goal) > h0]
+        return hill_sort(closer) + [n0] + hill_sort(further)
+
+    while len(queue) > 0 and queue[0][-1] != goal:
+        logging.info("Step: %s" % step)
+        logging.info("Queue: [%s]" % ", ".join(queue))
+        head_path = queue.pop(0)
+        logging.info("Tail node: [%s]" % head_path[-1])
+        connected_nodes = graph.get_connected_nodes(head_path[-1])
+        logging.info("Connected nodes: [%s]" % ", ".join(connected_nodes))
+        sorted_connected_nodes = hill_sort(connected_nodes)
+        logging.info("Sorted Connected nodes: [%s]" % ", ".join(sorted_connected_nodes))
+        new_paths = [head_path + node for node in
+                     sorted_connected_nodes if node not in head_path]
+        queue = new_paths + queue
+        step += 1
+    logging.info("Path found: %s" % queue[0])
+    return [n for n in queue[0]]  # WHY???
 
 ## Now we're going to implement beam search, a variation on BFS
 ## that caps the amount of memory used to store paths.  Remember,
