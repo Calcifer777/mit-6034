@@ -1,6 +1,6 @@
 # Fall 2012 6.034 Lab 2: Search
 #
-# Your answers for the true and false questions will be in the following form.  
+# Your answers for the true and false questions will be in the following form.
 # Your answers will look like one of the two below:
 #ANSWER1 = True
 #ANSWER1 = False
@@ -225,8 +225,9 @@ def branch_and_bound(graph, start, goal):
 
 
 def a_star(graph, start, goal):
-    raise NotImplementedError
-    logger.setLevel(logging.ERROR)
+    """ this thing does not work :( """
+    # pdb.set_trace()
+    logger.setLevel(logging.INFO)
     queue = [ [start] ]
     step = 0
     logging.info("START: %s" % start)
@@ -237,17 +238,9 @@ def a_star(graph, start, goal):
         l2 = path_length(graph, path2)
         h1 = graph.get_heuristic(path1[-1], goal) if path1[-1] != goal else 0
         h2 = graph.get_heuristic(path2[-1], goal) if path2[-1] != goal else 0
-        return l1+h1 - l2+h2
+        return (l1+h1) - (l2+h2)
 
-    def drop_redundant(queue):
-        end_nodes = set([p[-1] for p in queue])
-        new_queue = []
-        for end_node in end_nodes:
-            sel_paths = [p for p in queue if p[-1] == end_node]
-            sel_paths.sort(a_star_sort)
-            sel_path = sel_paths[0]
-            new_queue.append(sel_path)
-        return new_queue
+    extended_nodes = set()
 
     while len(queue) > 0 and queue[0][-1] != goal:
         logging.info("Step: %s" % step)
@@ -256,10 +249,10 @@ def a_star(graph, start, goal):
         logging.info("Tail node: [%s]" % head_path[-1])
         connected_nodes = graph.get_connected_nodes(head_path[-1])
         logging.info("Connected nodes: [%s]" % ", ".join(connected_nodes))
-        new_paths = [head_path + [node] for node in connected_nodes if node not in head_path]
+        new_paths = [head_path + [node] for node in connected_nodes if node not in extended_nodes]
+        extended_nodes.update(connected_nodes)
         queue.extend(new_paths)
         queue.sort(a_star_sort)
-        queue = drop_redundant(queue)
         step += 1
     logging.info("Path found: %s" % str(queue[0]))
     return queue[0]
