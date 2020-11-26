@@ -97,7 +97,7 @@ def dfs(graph, start, goal):
 ## Remember that hill-climbing is a modified version of depth-first search.
 ## Search direction should be towards lower heuristic values to the goal.
 def hill_climbing(graph, start, goal):
-    queue = [start]
+    queue = [ [start] ]
     step = 0
     logging.info("Hill Climbing START: %s" % start)
     logging.info("Hill Climbing GOAL: %s" % goal)
@@ -113,19 +113,19 @@ def hill_climbing(graph, start, goal):
 
     while len(queue) > 0 and queue[0][-1] != goal:
         logging.info("Step: %s" % step)
-        logging.info("Queue: [%s]" % ", ".join(queue))
+        logging.info("Queue: [%s]" % ", ".join((str(n) for n in queue)))
         head_path = queue.pop(0)
         logging.info("Tail node: [%s]" % head_path[-1])
         connected_nodes = graph.get_connected_nodes(head_path[-1])
         logging.info("Connected nodes: [%s]" % ", ".join(connected_nodes))
         sorted_connected_nodes = hill_sort(connected_nodes)
         logging.info("Sorted Connected nodes: [%s]" % ", ".join(sorted_connected_nodes))
-        new_paths = [head_path + node for node in
+        new_paths = [head_path + [node] for node in
                      sorted_connected_nodes if node not in head_path]
         queue = new_paths + queue
         step += 1
-    logging.info("Path found: %s" % queue[0])
-    return [n for n in queue[0]]  # WHY???
+    logging.info("Path found: %s" % str(queue[0]))
+    return queue[0]  # WHY???
 
 ## Now we're going to implement beam search, a variation on BFS
 ## that caps the amount of memory used to store paths.  Remember,
