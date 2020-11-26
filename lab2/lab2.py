@@ -35,9 +35,10 @@ ANSWER6 = False
 from search import Graph
 import logging
 import time
+import pdb
 
 logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.ERROR)
 
 ## Optional Warm-up: BFS and DFS
 # If you implement these, the offline tester will test them.
@@ -133,7 +134,40 @@ def hill_climbing(graph, start, goal):
 ## The k top candidates are to be determined using the 
 ## graph get_heuristic function, with lower values being better values.
 def beam_search(graph, start, goal, beam_width):
-    raise NotImplementedError
+
+    def heu_sort(path1, path2):
+        h1 = graph.get_heuristic(path1[-1], goal)
+        h2 = graph.get_heuristic(path2[-1], goal)
+        return h1 - h2
+
+    queue = { 0: [start] }
+    step = -1
+    logging.info("BEAM SEARCH START: %s" % start)
+    logging.info("BEAM SEARCH GOAL: %s" % goal)
+    logging.info("BEAM SEARCH WIDTH: %s" % beam_width)
+    while all([ path[-1] != goal for path in queue[step+1] ]):
+        step += 1
+        logging.info("Step: %s" % step)
+        paths_at_level = queue[step]
+        if len(paths_at_level) == 0:
+            return []
+        next_step_paths = []
+        # Look for paths of length step + 1
+        while len(paths_at_level) > 0:
+            logging.info("Queue: [%s]" % str(paths_at_level))
+            head_path = paths_at_level.pop(0)
+            logging.info("Tail node: [%s]" % head_path[-1])
+            connected_nodes = graph.get_connected_nodes(head_path[-1])
+            logging.info("Connected nodes: [%s]" % ", ".join(connected_nodes))
+            new_paths = [head_path + node for node in
+                 connected_nodes if node not in head_path]
+            next_step_paths.extend(new_paths)
+        # Sort the best `beam_width` paths
+        sorted_paths = sorted(next_step_paths, heu_sort)
+        logging.info("Sorted step %s paths: %s" % (str(step), str(sorted_paths)))
+        queue[step+1] = sorted_paths[:beam_width]
+    logging.info("Path found: %s" % str(queue[step+1][0]))
+    return list(queue[step+1][0])
 
 ## Now we're going to try optimal search.  The previous searches haven't
 ## used edge distances in the calculation.
@@ -141,11 +175,45 @@ def beam_search(graph, start, goal, beam_width):
 ## This function takes in a graph and a list of node names, and returns
 ## the sum of edge lengths along the path -- the total distance in the path.
 def path_length(graph, node_names):
-    raise NotImplementedError
+    def loop(graph, node_names, length):
+        if len(node_names) <= 1:
+            return 0
+        else:
+            edge_length = graph.get_edge(node_names[0], node_names[1]).length
+            if len(node_names) == 2:
+                return length + edge_length
+            else:
+                return loop(graph, node_names[1:], length+edge_length)
+    return loop(graph, node_names, 0)
 
 
 def branch_and_bound(graph, start, goal):
-    raise NotImplementedError
+    queue = [ [start] ]
+    step = 0
+    logging.info("BB START: %s" % start)
+    logging.info("BB GOAL: %s" % goal)
+    
+    def bb_sort(path1, path2):
+        l1 = path_length(graph, path1)
+        l2 = path_length(graph, path2)
+        h1 = graph.get_heuristic(path1[-1], goal)
+        h2 = graph.get_heuristic(path2[-1], goal)
+        return l1+h1 - l2+h2
+
+    while len(queue) > 0 and queue[0][-1] != goal:
+        logging.info("Step: %s" % step)
+        logging.info("Queue: [%s]" % ", ".join((str(n) for n in queue)))
+        head_path = queue.pop(0)
+        logging.info("Tail node: [%s]" % head_path[-1])
+        connected_nodes = graph.get_connected_nodes(head_path[-1])
+        logging.info("Connected nodes: [%s]" % ", ".join(connected_nodes))
+        new_paths = [head_path + [node] for node in connected_nodes if node not in head_path]
+        queue = new_paths + queue
+        queue = sorted(queue, bb_sort)
+        step += 1
+        pdb.set_trace()
+    logging.info("Path found: %s" % str(queue[0]))
+    return queue[0]  # WHY???
 
 def a_star(graph, start, goal):
     raise NotImplementedError
