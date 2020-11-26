@@ -727,7 +727,7 @@ def a_star_test_6_testanswer(val, original_val=None):
 make_test(type = 'FUNCTION_ENCODED_ARGS',
           getargs = a_star_test_6_getargs,
           testanswer = a_star_test_6_testanswer,
-          expected_val = "correct path for the quiz search problem",
+          expected_val = "SBCJLT",
           name = 'a_star'
           )
 

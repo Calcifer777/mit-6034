@@ -197,11 +197,7 @@ def branch_and_bound(graph, start, goal):
     def bb_sort(path1, path2):
         l1 = path_length(graph, path1)
         l2 = path_length(graph, path2)
-        h1 = graph.get_heuristic(path1[-1], goal) if path1[-1] != goal else 0
-        h2 = graph.get_heuristic(path2[-1], goal) if path2[-1] != goal else 0
-        # logging.info("Distance %s %s: %s + %s = %s" % (path1[-1], goal, l1, h1, l1+h1))
-        # logging.info("Distance %s %s: %s + %s = %s" % (path2[-1], goal, l2, h2, l2+h2))
-        return l1+h1 - l2+h2
+        return l1 - l2
 
     while len(queue) > 0 and queue[0][-1] != goal:
         logging.info("Step: %s" % step)
@@ -213,7 +209,6 @@ def branch_and_bound(graph, start, goal):
         new_paths = [head_path + [node] for node in connected_nodes if node not in head_path]
         queue.extend(new_paths)
         queue.sort(bb_sort)
-        # queue = sorted(queue, bb_sort)
         for path in queue:
             logging.info(
                 "P: %s, L: %s, H: %s, D: %s" % (
@@ -226,10 +221,48 @@ def branch_and_bound(graph, start, goal):
             )
         step += 1
     logging.info("Path found: %s" % str(queue[0]))
-    return queue[0]  # WHY???
+    return queue[0]
+
 
 def a_star(graph, start, goal):
     raise NotImplementedError
+    logger.setLevel(logging.ERROR)
+    queue = [ [start] ]
+    step = 0
+    logging.info("START: %s" % start)
+    logging.info("GOAL: %s" % goal)
+    
+    def a_star_sort(path1, path2):
+        l1 = path_length(graph, path1)
+        l2 = path_length(graph, path2)
+        h1 = graph.get_heuristic(path1[-1], goal) if path1[-1] != goal else 0
+        h2 = graph.get_heuristic(path2[-1], goal) if path2[-1] != goal else 0
+        return l1+h1 - l2+h2
+
+    def drop_redundant(queue):
+        end_nodes = set([p[-1] for p in queue])
+        new_queue = []
+        for end_node in end_nodes:
+            sel_paths = [p for p in queue if p[-1] == end_node]
+            sel_paths.sort(a_star_sort)
+            sel_path = sel_paths[0]
+            new_queue.append(sel_path)
+        return new_queue
+
+    while len(queue) > 0 and queue[0][-1] != goal:
+        logging.info("Step: %s" % step)
+        logging.info("Queue: [%s]" % ", ".join((str(n) for n in queue)))
+        head_path = queue.pop(0)
+        logging.info("Tail node: [%s]" % head_path[-1])
+        connected_nodes = graph.get_connected_nodes(head_path[-1])
+        logging.info("Connected nodes: [%s]" % ", ".join(connected_nodes))
+        new_paths = [head_path + [node] for node in connected_nodes if node not in head_path]
+        queue.extend(new_paths)
+        queue.sort(a_star_sort)
+        queue = drop_redundant(queue)
+        step += 1
+    logging.info("Path found: %s" % str(queue[0]))
+    return queue[0]
 
 
 ## It's useful to determine if a graph has a consistent and admissible
@@ -237,11 +270,27 @@ def a_star(graph, start, goal):
 ## admissible, but not consistent.  Have you seen any graphs that are
 ## consistent, but not admissible?
 
+# The heuristic value for every node in a graph must 
+# be less than or equal to the distance of the shortest path
+# from the goal to that node
 def is_admissible(graph, goal):
-    raise NotImplementedError
+    for node in graph.nodes:
+        h = graph.get_heuristic(node, goal)
+        shortest_path = branch_and_bound(graph, node, goal)
+        if h > path_length(graph, shortest_path):
+            return False
+    return True
 
+# For each edge in the graph, the edge length must be 
+# greater than or equal to the absolute value of the 
+# difference between the two heuristic values of its nodes
 def is_consistent(graph, goal):
-    raise NotImplementedError
+    for edge in graph.edges:
+        h1 = graph.get_heuristic(edge.node1, goal)
+        h2 = graph.get_heuristic(edge.node2, goal)
+        if edge.length < abs(h1-h2):
+            return False
+    return True
 
 HOW_MANY_HOURS_THIS_PSET_TOOK = 'Too many'
 WHAT_I_FOUND_INTERESTING = 'WHAT'
