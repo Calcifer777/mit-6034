@@ -38,7 +38,7 @@ import time
 import pdb
 
 logger = logging.getLogger()
-logger.setLevel(logging.ERROR)
+
 
 ## Optional Warm-up: BFS and DFS
 # If you implement these, the offline tester will test them.
@@ -188,6 +188,7 @@ def path_length(graph, node_names):
 
 
 def branch_and_bound(graph, start, goal):
+    logger.setLevel(logging.ERROR)
     queue = [ [start] ]
     step = 0
     logging.info("BB START: %s" % start)
@@ -196,8 +197,10 @@ def branch_and_bound(graph, start, goal):
     def bb_sort(path1, path2):
         l1 = path_length(graph, path1)
         l2 = path_length(graph, path2)
-        h1 = graph.get_heuristic(path1[-1], goal)
-        h2 = graph.get_heuristic(path2[-1], goal)
+        h1 = graph.get_heuristic(path1[-1], goal) if path1[-1] != goal else 0
+        h2 = graph.get_heuristic(path2[-1], goal) if path2[-1] != goal else 0
+        # logging.info("Distance %s %s: %s + %s = %s" % (path1[-1], goal, l1, h1, l1+h1))
+        # logging.info("Distance %s %s: %s + %s = %s" % (path2[-1], goal, l2, h2, l2+h2))
         return l1+h1 - l2+h2
 
     while len(queue) > 0 and queue[0][-1] != goal:
@@ -208,10 +211,20 @@ def branch_and_bound(graph, start, goal):
         connected_nodes = graph.get_connected_nodes(head_path[-1])
         logging.info("Connected nodes: [%s]" % ", ".join(connected_nodes))
         new_paths = [head_path + [node] for node in connected_nodes if node not in head_path]
-        queue = new_paths + queue
-        queue = sorted(queue, bb_sort)
+        queue.extend(new_paths)
+        queue.sort(bb_sort)
+        # queue = sorted(queue, bb_sort)
+        for path in queue:
+            logging.info(
+                "P: %s, L: %s, H: %s, D: %s" % (
+                    str(path), 
+                    path_length(graph, path),
+                    graph.get_heuristic(path[-1], goal) if path[-1] != goal else 0,
+                    path_length(graph, path) + \
+                        (graph.get_heuristic(path[-1], goal) if path[-1] != goal else 0)
+                )
+            )
         step += 1
-        pdb.set_trace()
     logging.info("Path found: %s" % str(queue[0]))
     return queue[0]  # WHY???
 

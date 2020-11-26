@@ -169,34 +169,40 @@ NEWGRAPH2 = Graph(edgesdict=
 NEWGRAPH3 = Graph(nodes=["S"])
 
 
-NEWGRAPH4 = Graph(nodes=["S","A", "B", "C", "D", "E", "F", "H", "J", "K",
-            "L", "T" ],
-                 edgesdict = [{ 'NAME': 'eSA', 'LENGTH': 2, 'NODE1': 'S', 'NODE2': 'A' },
-              { 'NAME': 'eSB', 'LENGTH': 10, 'NODE1': 'S', 'NODE2':'B' },
-              { 'NAME': 'eBC', 'LENGTH': 5, 'NODE1': 'B', 'NODE2':'C' },
-              { 'NAME': 'eBF', 'LENGTH': 2, 'NODE1': 'B', 'NODE2':'F' },
-              { 'NAME': 'eCE', 'LENGTH': 5, 'NODE1': 'C', 'NODE2':'E' },
-              { 'NAME': 'eCJ', 'LENGTH': 12, 'NODE1': 'C', 'NODE2':'J' },
-              { 'NAME': 'eFH', 'LENGTH': 8, 'NODE1': 'F', 'NODE2':'H' },
-              { 'NAME': 'eHD', 'LENGTH': 3, 'NODE1': 'H', 'NODE2':'D' },
-              { 'NAME': 'eHK', 'LENGTH': 5, 'NODE1': 'H', 'NODE2':'K' },
-              { 'NAME': 'eKJ', 'LENGTH': 1, 'NODE1': 'K', 'NODE2':'J' },
-              { 'NAME': 'eJL', 'LENGTH': 4, 'NODE1': 'J', 'NODE2':'L' },
-              { 'NAME': 'eKT', 'LENGTH': 7, 'NODE1': 'K', 'NODE2':'T' },
-              { 'NAME': 'eLT', 'LENGTH': 5, 'NODE1': 'L', 'NODE2':'T' },
-              ],
-                 heuristic={"T":{'S': 10,
-                                 'A': 6,
-                                 'B': 5,
-                                 'C': 2,
-                                 'D': 5,
-                                 'E': 1,
-                                 'F': 100,
-                                 'H': 2,
-                                 'J': 3,
-                                 'K': 100,
-                                 'L': 4,
-                                 'T': 0,}})
+NEWGRAPH4 = Graph(
+    nodes=["S","A", "B", "C", "D", "E", "F", "H", "J", "K", "L", "T" ],
+    edgesdict = [
+        { 'NAME': 'eSA', 'LENGTH': 2, 'NODE1': 'S', 'NODE2': 'A' },
+        { 'NAME': 'eSB', 'LENGTH': 10, 'NODE1': 'S', 'NODE2':'B' },
+        { 'NAME': 'eBC', 'LENGTH': 5, 'NODE1': 'B', 'NODE2':'C' },
+        { 'NAME': 'eBF', 'LENGTH': 2, 'NODE1': 'B', 'NODE2':'F' },
+        { 'NAME': 'eCE', 'LENGTH': 5, 'NODE1': 'C', 'NODE2':'E' },
+        { 'NAME': 'eCJ', 'LENGTH': 12, 'NODE1': 'C', 'NODE2':'J' },
+        { 'NAME': 'eFH', 'LENGTH': 8, 'NODE1': 'F', 'NODE2':'H' },
+        { 'NAME': 'eHD', 'LENGTH': 3, 'NODE1': 'H', 'NODE2':'D' },
+        { 'NAME': 'eHK', 'LENGTH': 5, 'NODE1': 'H', 'NODE2':'K' },
+        { 'NAME': 'eKJ', 'LENGTH': 1, 'NODE1': 'K', 'NODE2':'J' },
+        { 'NAME': 'eJL', 'LENGTH': 4, 'NODE1': 'J', 'NODE2':'L' },
+        { 'NAME': 'eKT', 'LENGTH': 7, 'NODE1': 'K', 'NODE2':'T' },
+        { 'NAME': 'eLT', 'LENGTH': 5, 'NODE1': 'L', 'NODE2':'T' },
+    ],
+    heuristic={
+        "T":{
+            'S': 10,
+            'A': 6,
+            'B': 5,
+            'C': 2,
+            'D': 5,
+            'E': 1,
+            'F': 100,
+            'H': 2,
+            'J': 3,
+            'K': 100,
+            'L': 4,
+            'T': 0,
+        }
+    }
+)
 
 # graph used in a_star test 7 (Test 31),
 # to differentiate using an extended-list vs not.

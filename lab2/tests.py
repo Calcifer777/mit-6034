@@ -624,7 +624,7 @@ def branch_and_bound_6_testanswer(val, original_val=None):
 make_test(type = 'FUNCTION_ENCODED_ARGS',
           getargs = branch_and_bound_6_getargs,
           testanswer = branch_and_bound_6_testanswer,
-          expected_val = "correct path for the quiz search problem",
+          expected_val = list("SBFHKT"),
           name = 'branch_and_bound'
           )
 
