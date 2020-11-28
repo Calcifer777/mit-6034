@@ -283,7 +283,8 @@ def test_online(verbosity=1):
 
 
 if __name__ == '__main__':
-    test_offline()
+    # test_offline()
+    test_online()
 
 
 def make_test_counter_decorator():
