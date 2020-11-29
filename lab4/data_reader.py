@@ -80,7 +80,7 @@ def read_vote_data(filename):
         vote['result'] = row[5]
         votes.append(vote)
     f.close()
-    return votes
+    return votes[1:]  # skip header
 
 def limit_votes(legislators, votes, n):
     indices = [i for i in xrange(len(legislators[0]['votes'])-1, -1, -1) if

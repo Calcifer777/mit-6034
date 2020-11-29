@@ -107,17 +107,23 @@ senate_group1, senate_group2 = crosscheck_groups(senate_people)
 
 def euclidean_distance(list1, list2):
     # this is not the right solution!
-    return hamming_distance(list1, list2)
+    assert isinstance(list1, list)
+    assert isinstance(list2, list)
+    pairs = zip(list1, list2)
+    diffs = map(lambda p: p[0]-p[1], pairs)
+    squares = map(lambda d: d**2, diffs)
+    return float(sum(squares))**(0.5)
 
 #Once you have implemented euclidean_distance, you can check the results:
-#evaluate(nearest_neighbors(euclidean_distance, 1), senate_group1, senate_group2)
+evaluate(nearest_neighbors(euclidean_distance, 1), senate_group1, senate_group2)
 
 ## By changing the parameters you used, you can get a classifier factory that
-## deals better with independents. Make a classifier that makes at most 3
-## errors on the Senate.
+## deals better with independents. Make a classifier that makes 
+## at most 3 errors on the Senate.
 
-my_classifier = nearest_neighbors(hamming_distance, 1)
-#evaluate(my_classifier, senate_group1, senate_group2, verbose=1)
+my_classifier = nearest_neighbors(euclidean_distance, 5)
+result = evaluate(my_classifier, senate_group1, senate_group2, verbose=1)
+assert result >= 99
 
 ### Part 2: ID Trees
 #print CongressIDTree(senate_people, senate_votes, homogeneous_disorder)
