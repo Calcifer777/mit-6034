@@ -443,4 +443,75 @@ Arrange for the branching factor to vary with depth of
 penetration, possibly using tapered search to direct more effort
 into the more promising moves.
 
+\section{Symbolic constraints and propagation}
+
+\paragraph{Principle of convergent intelligence} The world
+manifest constraints and regularities. If a computer is to
+exhibit intelligence, it must exploit those constraints and
+regularities, no matter of what the computer happens to be made.
+
+\paragraph{Describe-to-explain principle} The act of detailed
+description may turn probabilistic regularities into entirely
+deterministic constrains.
+
+\paragraph{Marr's methodological principles}
+\begin{enumerate}
+  \item Identify the problem
+  \item Select or develop an appropriate representation
+  \item Expose constraints or regularities
+  \item Create particular procedures 
+  \item Verify via experiments
+\end{enumerate}
+
+\paragraph{Contraction net} is a representation that is a \textit{frame
+system}, in which:
+\begin{itemize}
+  \item Lexically and structurally, certain frame classes
+    identify a finite list of application-specific
+    interpretations
+  \item Procedurally, demon procerures enforce compatibility
+    constraints among connected frames
+\end{itemize}
+
+\subsection{Applications}
+
+\subsubsection{3D object recognizion in 2D images}
+
+\paragraph{Labeled drawing} is a representation that is a \textit{frame
+system}, in which:
+\begin{itemize}
+  \item Lexically, there are line frames and junctions frames.
+    Lines may be convex, cocave, or boundary lines. Junctions may
+    be \textit{L}, \textit{Fork}, \textit{T}, or \textit{Arrow}
+    junctions
+  \item Structurally, junctions frames are connected by line
+    frames. Also, each junction frame contains a list of
+    interpretation combinations for its connecting lines
+  \item Semantically, line frames denotee physical edges.
+    Junction frames denote physical vertexes
+  \item Procedurally, demon procedures enforce the constraint
+    that each junction lavel must be compatible with at least one
+    of the junction labels at each of the neighboring junctions
+\end{itemize}
+
+\subsubsection{Time-interval relations and scheduling}
+
+\paragraph{Interval net} is a representation that is a
+\textit{contraction net}, in which:
+\begin{itemize}
+  \item Lexically and semantically there are interval frames
+    denoting time intervals and lik frames denoting time
+    relations: specifically: $\overrightarrow{before}$,
+    $\overrightarrow{during}$, $\overrightarrow{overlaps}$,
+    $\overrightarrow{meets}$, $\overrightarrow{starts}$,
+    $\overrightarrow{finishes}$, $\overrightarrow{is equal to}$,
+    and their mirrors
+  \item Structurally, interval frames are connected by link
+    frames
+  \item Procedurally, demon procedures enforce the constraint
+    that the interpretations allowed for a link frame between two
+    intervals must be consistent with the interpretations allowed
+    for the two link frames joining the two intervals to a third
+    interval
+\end{itemize}
 \end{document}

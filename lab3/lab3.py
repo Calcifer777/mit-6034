@@ -11,7 +11,7 @@ from util import INFINITY, NEG_INFINITY
 
 
 logger = logging.getLogger()
-logger.setLevel(logging.WARN)
+logger.setLevel(logging.INFO)
 
 ### 1. Multiple choice
 
@@ -116,13 +116,13 @@ def alpha_beta_search(
         # Check end state
         if is_terminal_fn(depth, board):
             return eval_fn(board), None
-        # Else ... care dark magic below
+        # Else... care! dark magic below
         best_eval, best_move = (None, None)
         for move, new_board in get_next_moves_fn(board):
             eval_, _ = loop(-beta, -alpha, new_board, depth-1)
             if alpha >= beta:
                 break
-            if -eval_ > best_eval:
+            if -eval_ > best_eval:  # anything > None, first pass is good
                 alpha = -eval_
                 best_eval = -eval_
                 best_move = move
