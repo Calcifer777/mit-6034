@@ -1,6 +1,7 @@
 \documentclass{article}
 
-\usepackage{amsmath}
+\usepackage{amsmath, amssymb}
+\newtheorem{definition}{Definition}
 
 \begin{document}
 
@@ -514,4 +515,66 @@ system}, in which:
     for the two link frames joining the two intervals to a third
     interval
 \end{itemize}
+
+\subsection{Map coloring - Lecture notes}
+
+\begin{definition}
+  A \textbf{variable} $v$ is something that can have an assigment
+\end{definition}
+
+\begin{definition}
+  A \textbf{value} $x$ is something that can be an assigment
+\end{definition}
+
+\begin{definition}
+  A \textbf{domain} $D$ is a bag of values
+\end{definition}
+
+\begin{definition}
+  A \textbf{constraint} $c$ is a limit on variable values
+\end{definition}
+
+Procedure:
+\begin{itemize}
+  \item For each \textit{DFS} assignment
+  \item For each variable $v_i$ considered.  A \textit{considered 
+    variable} is some variable that may affect the assignment decision
+  \item For each $x_i$ in $D_i$
+  \item For each constraint $c(x_i, x_j)$ where $x_j \in D_j$
+  \item If $\nexists x_j$ such that $c(x_i, x_j)$ is satisfied,
+    then remove $x_i$ from $D_i$.
+  \item If $D_i$ is empty, backtrack
+\end{itemize}
+
+Examples of \textit{considered variables}:
+\begin{itemize}
+  \item Nothing: leads to wrong outputs
+  \item Assignment: constraints are too slack
+  \item Neighbors' only assignment: can succeed but depends on
+    assigment ordering. If most constrained assignments are
+    considered first, then it is fast; vice versa, might not end
+  \item Propagate checking through variables with reduced domain
+    reduced to a single value
+  \item Propagate checking through variables with reduced domains 
+  \item Everything: too computationally intensive
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \end{document}
