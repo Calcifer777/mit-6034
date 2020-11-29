@@ -9,15 +9,33 @@ from csp import BinaryConstraint, CSP, CSPState, Variable,\
 
 # Implement basic forward checking on the CSPState see csp.py
 def forward_checking(state, verbose=False):
+    """
+    Args:
+        state (CSPState)
+    """
     # Before running Forward checking we must ensure
     # that constraints are okay for this state.
     basic = basic_constraint_checker(state, verbose)
     if not basic:
         return False
-
     # Add your forward checking logic here.
-    
-    raise NotImplementedError
+    X = state.get_current_variable()
+    if not X:
+        return True
+    x = X.get_assigned_value()
+    # Loop through constraints
+    for c in state.get_constraints_by_name(X.get_name()):
+        var_i, var_j = c.get_variable_i_name(), c.get_variable_j_name()
+        Y_name = var_i if X.get_name() != var_i else var_j
+        Y = state.get_variable_by_name(Y_name)
+        for v in Y.get_domain():
+            if not c.check(state, x, v):
+                Y.reduce_domain(v)
+        if not Y.get_domain():
+            return False
+    # Return
+    return True
+
 
 # Now Implement forward checking + (constraint) propagation through
 # singleton domains.
@@ -26,9 +44,28 @@ def forward_checking_prop_singleton(state, verbose=False):
     fc_checker = forward_checking(state, verbose)
     if not fc_checker:
         return False
+    # Find variables with singleton Domain size
+    queue = filter(lambda v: len(v.get_domain()) == 1, state.get_all_variables())
+    starting_queue = set(queue)
+    visited = set()
+    while queue:
+        X = queue.pop()
+        x = X.get_domain()[0]
+        visited.add(X.get_name())
+        # Loop through constraints
+        for c in state.get_constraints_by_name(X.get_name()):
+            var_i, var_j = c.get_variable_i_name(), c.get_variable_j_name()
+            Y_name = var_i if X.get_name() != var_i else var_j
+            Y = state.get_variable_by_name(Y_name)
+            for v in Y.get_domain():
+                if not c.check(state, x, v):
+                    Y.reduce_domain(v)
+            if not Y.get_domain():
+                return False
+            elif len(Y.get_domain()) == 1 and Y_name not in visited:
+                queue.append(Y)
+    return True
 
-    # Add your propagate singleton logic here.
-    raise NotImplementedError
 
 ## The code here are for the tester
 ## Do not change.

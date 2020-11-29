@@ -119,14 +119,14 @@ class CSPState:
                  variable_order,
                  variable_index):
         """
-        constraint_map - a dictionary of variable names to
-                         lists of associated constraints
-        variable_map - a dictionary of variable names to
-                       variable objects
-        variable_order - the ordering in which variables are assigned
-                       values are the names of variables
-        variable_index - the position into the variable_order in which
-                       we are currently making an assignment.
+        constraint_map (dict[str, List]): var name -> constraints
+        variable_map (dict[str, Variable]): var name -> var
+        variable_order (list): list of variable names;
+            determines the order in which variables 
+            are assigned
+        variable_index (int) - the position into the 
+            variable_order in which we are currently making 
+            an assignment
         """
         self.constraint_map = constraint_map
         self.variable_map = variable_map
