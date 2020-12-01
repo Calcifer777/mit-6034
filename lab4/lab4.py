@@ -131,9 +131,23 @@ assert result >= 99
 ## Now write an information_disorder function to replace homogeneous_disorder,
 ## which should lead to simpler trees.
 
-def information_disorder(yes, no):
-    return homogeneous_disorder(yes, no)
+from collections import Counter
 
+
+def avg_disorder(arr, t):
+   return -sum([
+       (float(x)/t)*math.log(float(x)/t, 2) for x in arr
+   ])
+
+def information_disorder(yes, no):
+    y = float(len(yes))
+    n = float(len(no))
+    t = y + n
+    y_counter = Counter(yes)
+    n_counter = Counter(no)
+    y_disorder = avg_disorder(y_counter.values(), y)
+    n_disorder = avg_disorder(n_counter.values(), n)
+    return y/t*y_disorder + n/t*n_disorder
 #print CongressIDTree(senate_people, senate_votes, information_disorder)
 #evaluate(idtree_maker(senate_votes, homogeneous_disorder), senate_group1, senate_group2)
 
@@ -162,22 +176,22 @@ def limited_house_classifier(house_people, house_votes, n, verbose = False):
                                    
 ## Find a value of n that classifies at least 430 representatives correctly.
 ## Hint: It's not 10.
-N_1 = 10
+N_1 = 45
 rep_classified = limited_house_classifier(house_people, house_votes, N_1)
 
 ## Find a value of n that classifies at least 90 senators correctly.
-N_2 = 10
+N_2 = 100
 senator_classified = limited_house_classifier(senate_people, senate_votes, N_2)
 
 ## Now, find a value of n that classifies at least 95 of last year's senators correctly.
-N_3 = 10
+N_3 = 25
 old_senator_classified = limited_house_classifier(last_senate_people, last_senate_votes, N_3)
 
 
 ## The standard survey questions.
-HOW_MANY_HOURS_THIS_PSET_TOOK = ""
-WHAT_I_FOUND_INTERESTING = ""
-WHAT_I_FOUND_BORING = ""
+HOW_MANY_HOURS_THIS_PSET_TOOK = "too many"
+WHAT_I_FOUND_INTERESTING = "WHAT"
+WHAT_I_FOUND_BORING = "WHAT"
 
 
 ## This function is used by the tester, please don't modify it!
@@ -189,4 +203,3 @@ def eval_test(eval_fn, group1, group2, verbose = 0):
     else:
         raise Exception, "Error: Tester tried to use an invalid evaluation function: '%s'" % eval_fn
 
-    
