@@ -573,6 +573,230 @@ Examples of \textit{considered variables}:
   \item Everything: too computationally intensive
 \end{itemize}
 
+\section{K-D Trees and Nearest Neighbors}
+
+\paragraph{Consistency heuristic} Whenever you want to guess a
+property of something, given nothing else to go on but a set of
+reference cases, find the most similar case, as measured by known
+properties, for which the property is known. Guess that the
+unknown property is the same as that known property.
+
+\paragraph{Decision tree} A decision tree is a representation,
+that is a semantic tree in which:
+\begin{itemize}
+  \item Each node is connected to a set of possible answers
+  \item Each nonleaf noed is connected to a test that splits its
+    set of possible answers into subsets corresponding to
+    different test results
+  \item Each branch carries a particular test result's subset to
+    another node
+\end{itemize}
+
+\paragraph{k-d tree} A k-d tree is a representation,
+that is a decision tree in which:
+\begin{itemize}
+  \item The set of possible answers consists of points, one of
+    which may be the nearest neighbor to a given point
+  \item Each test specifies a coordinate, a threshold, and a
+    neutral zone around the threshold containing no points
+  \item Each test divides a set of points into two sets, according
+    to on which sid of the threshold each point lies
+\end{itemize}
+
+How to divide the cases into sets:
+\begin{itemize}
+  \item If there is only one case, stop
+  \item If this is the first division of cases, pick the vertical
+    axis for comparison; otherwise, pick the axis that is
+    different from the axis at the next higher level
+  \item Considering only the axis of comparison, find the average
+    position of the two middle objects. Call this average position
+    the threshold, and construct a decision-tree test that
+    compares unknowns in the axis of comparison againsts the
+    threshold. Also note the position of the two middle obkects in
+    the axis of comparison. Call these positions the upper and
+    lower boundaries
+  \item Divide up all the obects into two subsets, accorting to on
+    which side of the average position they lies
+  \item Divide up thw objects in each subset, forming a subtree
+    for each, using this procedure
+\end{itemize}
+
+To find the nearest neighbor using the K-D procedure:
+\begin{itemize}
+  \item Determine whether there is only one element in the set
+    under consideration
+  \begin{itemize}
+    \item If there is only one, report it
+    \item Otherwise, compare the unknown, in the axis of
+      comparison, against the current node's threshold. The result
+      determines the likely set
+    \item Find the nearest neighbor in the likely set using this
+      procedure
+    \item Determine whether the distance to the nearest neighbor
+      in the likely set is less than or equal to the distance to
+      the other set's boundary in the axis of comparison:
+      \begin{itemize}
+        \item If it is, then report the nearest neighbor in the
+          likely set
+        \item If it is not, check the unlikely set using this
+          procedure; return the nearer of the nearest neighbors in
+          the likely set and in the unlikely set
+      \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\section{Identication Trees}
+
+\paragraph{Identication Tree} An identification tree is a
+represntation, that is a decision tree in which:
+\begin{itemize}
+  \item Each set of possible conclusion is established implicitly
+    by a list of samples of known class
+\end{itemize}
+
+\paragraph{Average disorder}
+\begin{math}
+  Average(disorder) =
+  \sum_{b}{\frac{n_b}{n_t} \sum_{c}{-\frac{n_{bc}}{n_b}\log_{2}\frac{n_{bc}}{n_b}}}
+\end{math}
+where:
+\begin{itemize}
+  \item $n_b$ is the number of samples in brench $b$
+  \item $n_t$ is the total number of samples in all branches
+  \item $n_bc$ is the total of samples in branch $b$ of class $c$
+\end{itemize}
+
+To generate an identification tree using SPROUTER:
+\begin{itemize}
+  \item Until each leaf node is populated by as homogeneous a
+    sample set as possible:
+    \begin{itemize}
+      \item Select a leaf node with an inhomogeneous sample set
+      \item Replace that leaf node by a test node that divides the
+        inhomogeneous sample set into minimally inhomogeneous
+        subsets, according to some measure of disorder
+    \end{itemize}
+\end{itemize}
+
+To convers an identification tree into a rule set, execute the
+following procedure - PRUNER:
+\begin{itemize}
+  \item Create one rule for each root-to-leaf path in the
+    identification tree
+  \item Simplify each rule by discarding antecedents that have no
+    effect on the conclusion reached by the rule
+  \item Replace those rules that share the most common consequent
+    by a default rule that is triggered when no other rule is
+    triggered. In the eventi of a tie, use some heuristic tie
+    breaker to choose a default rule
+\end{itemize}
+
+\section{Neural Nets}
+
+\paragraph{Neural Net} A neural net is a representation, that is a
+arithmetic constraint net in which:
+\begin{itemize}
+  \item Operation frames denote arithmetic constraints modeling
+    synapses and neurons
+  \item Demon procedures propagate stimuli through synapses and
+    neurons
+\end{itemize}
+With demon procedures defines assignment:
+\begin{itemize}
+  \item When a value is written into a synapse's input slot, write
+    the product of the value and the synapse's weight into the
+    synapse's output slot
+  \item When a value is written into a synapse's output slot,
+    check the following neuron to see whether all its input
+    synapses' outputs have values:
+    \begin{itemize}
+      \item If they do, add the outputs values of the input
+        synapses together, pass the sum through the activation
+        function, and write the appropriate value into the
+        neuron's output slot
+      \item If they don't, do nothing
+    \end{itemize}
+\end{itemize}
+
+To do back propagation to train a neural net:
+\begin{itemize}
+  \item Pick a rate parameter $r$
+  \item Until performance is satisfactory,
+    \begin{itemize}
+      \item For each input,
+        \begin{itemize}
+          \item Compute the resulting output
+          \item Compute $\beta$ for nodes in the output layers
+            using $\beta_{x} = d_x - o_x$
+          \item Compute $\beta$ for all other nodes using:
+            \begin{math}
+              \beta_j = \sum_{k}{w_{jk}o_k(1-o_k)\beta_k}
+            \end{math}
+          \item Compute weight changes for all weight using:
+            \begin{math}
+              \Delta{w_{ij}} = ro_io_k(1-o_k)\beta_j
+            \end{math}
+        \end{itemize}
+      \item Add up the weight changes to all sample inputs and
+        changes the weights
+    \end{itemize}
+\end{itemize}
+
+\subsection{Back-propagation characteristics}
+
+\begin{itemize}
+  \item Training may require thousands of back propagations
+  \item Back-propagation can be done in stages
+  \item Back-propagation can train a net to learn to recognize
+    multiple concepts simultaneously
+  \item Trained neural nets can make predictions
+  \item Excess weights lead to overfitting. Rule of thumb: be sure
+    that the number of trainable weights influencing any
+    particular output is smaller than the number of training
+    samples
+  \item Neural-bet training is an article
+\end{itemize}
+
+\subsection{Perceptrons}
+
+\paragraph{Perceptron} A perceptron is a representation, that is a
+neural net in which:
+\begin{itemize}
+  \item There is only one neuron
+  \item The input sare binary
+  \item Logic boxes may be interposed between the perceptron's
+    inputs and the perceptron's weights. Each logic box can be
+    viewed as a table that produces an output value of 0s or 1 for
+    each combination os 0s and 1s that can appear at its inputs
+  \item The output of the perceptron is 0s or 1 depending on
+    whether the weighted sum of the logic-box outputs is greater
+    than the threshold.
+\end{itemize}
+
+The perceptron convergence procedure guarantees success whenever
+success is possible.
+
+To train a perceptron:
+\begin{itemize}
+  \item Until the perceptron yields the correct result for each
+    training sample, for each sample,
+    \begin{itemize}
+      \item If the perceptron yields the wrong answer,
+        \begin{itemize}
+          \item If the perceptron says no when it should say yes,
+            add the logic-box output vector to the weight vector
+          \item Otherwise, subtract the logic-box output vector
+            from the weight vector
+        \end{itemize}
+      \item Otherwise, do nothing
+    \end{itemize}
+\end{itemize}
+
+
+
+
+
 
 
 
