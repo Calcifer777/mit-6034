@@ -1,2 +1,46 @@
 \section{Representations: classes, trajectories, transitions}
 
+\paragraph{Frame} A frame is formed a node and the links connected
+to it in a semantic net
+
+An \textbf{instance constructor} makes instance frames.
+
+A \textbf{slot writer} installs slot values. Its input is a frame,
+then name of the slot, and a value to be installed.
+
+A \textbf{slot reader}  retrieves slot values. Its input is a
+frame and the name of a slot; its output is the corresponding slot
+value.
+
+The slots in an instance are determined by that instance's
+superclass: if a superclass has a slot, then the instance inherits
+that slot.
+
+Shared knowledge, located centrally, is:
+\begin{itemize}
+  \item Easier to construct when you write it down
+  \item Easier to correct when you make a mistake
+  \item Easier to keep yp to date as times change
+  \item Easier to distribute because it can be distributed
+    automatically
+\end{itemize}
+
+One way to accomplish knowledge sharing is to use
+\textbf{whe-constructed procedures} associated with the classes of
+which the instance is a member. THe expectations established by
+when-constructed procedures are called \textbf{defaults}.
+
+A \textbf{class-precedence list} is an ordered list that flattens
+a class inheritance structure.
+
+A procedure that is specialized to one of the classes on the
+class-precedence list is said to be applicable.
+
+Each class should appear on class-precedence lists before any of
+its superclasses.
+
+Each direct superclass of a given class should appear on
+class-precedence lists before any other direct superclass that is
+to its right.
+
+TO BE CONTINUED
