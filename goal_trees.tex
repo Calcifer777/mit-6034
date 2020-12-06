@@ -1,0 +1,81 @@
+\section{Reasoning: goal trees and rule-based expert systems}
+
+A \textbf{representation} consists of the following four
+fundamental parts:
+\begin{itemize}
+  \item A lexical part that determines which symbols are allowed
+    in the representation's vocabulary
+  \item A structural part that describes constraints on how the
+    symbols can be arranged
+  \item A procedural part that specifies access procedures that
+    enable you to create descriptions, to modify them, and to
+    answer questions using them
+  \item A semantic part that establishes a way associating a
+    meaning with the description
+\end{itemize}
+
+A \textbf{semantic net} is a representation in which:
+\begin{itemize}
+  \item Lexically, there are nodes, links, and application-specific link labels
+  \item Structurally, each link conects a tail node to a head node
+  \item Semantically, the nodes and links denote application-specific entities
+\end{itemize}
+With constructors that:
+\begin{itemize}
+  \item Construct a node
+  \item Construct a link, given a link label and two nodes to be connected
+\end{itemize}
+With readers that:
+\begin{itemize}
+  \item Produce a list of all links departing from a given node
+  \item Produce a list of all links arriving at a given node
+  \item Produce a tail node, given a link
+  \item Produce a head node, given a link
+  \item Produce a link label, given a link
+\end{itemize}
+
+A \textbf{Semantic tree} is a representation, that is a semantic net in which:
+\begin{itemize}
+  \item certain links are called \textbf{branches}. Each banch
+    connects two nodes; the head node is called the \textbf{parent
+    node} and the tail node is called the \textit{child node}
+  \item One node has no parent; it is called the root node.
+    Other nodes have exactly one parent
+  \item Some nodes have no children, they are called
+    \textit{leaf nodes}. When two nodes are connected to each
+    other by a chain of two or more branches, one is said to be
+    the \textit{ancestor}; the other if said to be the
+    descendant
+\end{itemize}
+
+With constructors that:
+\begin{itemize}
+\item Connect a parent node to a child node with a branch links
+\end{itemize}
+With readers that:
+\begin{itemize}
+\item Produce a list of a given node's children
+\item Produce a given node's parent
+\end{itemize}
+
+A \textbf{goal tree} is a semantic tree in which: nodes represent goals and branches indicate how you can achive goals by solving one or more subgoals. Each node's children corresponds to \textbf{immediate subgoals}; each node's parent corresponds to the \textbf{immediate supergoal}. The top node, the one with no parent, is the \textbf{root} goal.
+
+Some goals are satisfied directly, without reference to any other subgoals. These goals are called \textbf{leaf goals}, and the corresponding nodes are called \textbf{leaf nodes}.
+
+Because goal trees always involve \textit{And} nodes, or \textit{Or} nodes, or both. they are often called \textbf{And-Or trees}.
+
+To determine whether a goal has been achieved, you need a testing procedure. The key procedure, \textit{REDUCE}, channels action into the \textit{REDUCE-AND} and the \textit{REDUCE-OR}.
+
+Goal trees enable introspective question answering:
+\begin{itemize}
+  \item how: the immediate subgoal (downstream) 
+  \item why the immediate supergoal (downstream) 
+\end{itemize}
+
+\subsection{Eliciting expert systems features}
+\begin{itemize}
+  \item Heuristic of specific situations: it is dangerous to limit inquiry to office interviews
+  \item Heuristic of situation comparison: ask a domain expert for clarification whenever the domain expert's behavior varies in situations that look identical to the knowledge enginner.
+  \item You should build a system and see when it cracks. Helps identifiying missing rules.
+\end{itemize}
+

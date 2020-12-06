@@ -1,0 +1,109 @@
+
+\section{Support vector machines}
+
+Key idea:
+\begin{itemize}
+  \item find the widest separating strip between the points
+belonging to the two classes.
+  \item Find a vector $w$ that is perpendicular to the median line to the
+strip.
+  \item For any unknown $u$, classify as positive example if 
+    $f(u) = w\cdot u + b \geq 0$
+\end{itemize}
+
+\subsection{Derivation of result}
+
+Assume the following constraints:
+
+\begin{math}
+  c_i = \begin{cases}
+    f(x_{+}) = w \cdot x_{+} + b \geq 1 & for \medspace x_{+} \\
+    f(x_{-}) = w \cdot x_{-} + b \leq -1 & for \medspace x_{-} 
+  \end{cases}
+\end{math}
+
+The constraint can be generalized introducing:
+
+\begin{math}
+  y_i = \begin{cases}
+    1 & x_{+} \\
+    -1 & x_{-}
+  \end{cases}
+\end{math}
+
+So to obtain:
+\begin{math}
+  c_i: y_i(w \cdot x_i + b) - 1 \geq 0
+\end{math}
+
+Also, assume that the constraint is satisfied with equality for
+observations at the edge of the strip.
+
+\paragraph{Finding the width of the strip} For any two points at
+the edge of the strip, one negative and one positive observation,
+it holds that:
+
+\begin{equation}
+  \begin{aligned}
+    width &= (x_{+} - x_{-}) \cdot \frac{w}{\|w\|} \\
+          &= (1-b) + (1+b) \\
+          &= \frac{2}{\|w\|}
+  \end{aligned}
+\end{equation}
+
+\paragraph{Objective} Maximize the width of the strip, 
+reformulated as: 
+\begin{equation}
+  objective = \frac{1}{2}\|w\|^2
+\end{equation}
+
+\subsection{Constrained optimization}
+
+The problem can be formulated as: 
+
+\begin{equation}
+  L(w) = \frac{1}{2}\|w\|^2 - 
+  \sum_{i}{\alpha_{i}\left[ y_i(w \cdot x_i + b) - 1 \right]}
+\end{equation}
+
+\begin{equation}
+  \begin{cases}
+    \frac{\varDelta L}{w}: w - \sum{\alpha_{i}y_ix_i} = 0  \\
+    \frac{\varDelta L}{b}: \sum_{i}{\alpha_{i}y_i } = 0
+  \end{cases}
+\end{equation}
+
+Plugging the first f.o.c. into the Lagrangean, we obtain:
+\begin{equation}
+  L = \sum_i{a_i} - \frac{1}{2}
+    \sum_{i}\sum_{j}{a_ia_jy_iy_j (x_i \cdot x_j)}
+\end{equation}
+
+Then check the sign of:
+
+\begin{equation}
+  f(u) = \left(\sum{a_i y_i (x_i u)}\right) + b
+\end{equation}
+
+Thus:
+\begin{itemize}
+  \item $w$ is a linear sum of the samples. 
+  \item Learning ($w$) depends only on the the dot product 
+    of observation pairs
+  \item Classification depends only on the the dot product 
+    of observations with the unkown
+  \item Exclusive reliance on dot products enables approach 
+    to problems in which samples cannot be separated by a
+    straight line
+\end{itemize}
+
+When the classes are not linearly separable, handle
+non-linearities by applying a transformation $\Phi$ - the
+\textbf{kernel} to the dot products of the samples, 
+so to solve the problem in a higher dimensional space. 
+
+Common kernels are:
+\begin{itemize}
+  \item Polynomial: $(u \cdot v + 1)^n$
+  \item Radial basis: $e^{-\frac{u-v}{\sigma}}$
+\end{itemize}

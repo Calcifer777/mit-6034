@@ -1,0 +1,46 @@
+\section{Identication Trees}
+
+\paragraph{Identication Tree} An identification tree is a
+represntation, that is a decision tree in which:
+\begin{itemize}
+  \item Each set of possible conclusion is established implicitly
+    by a list of samples of known class
+\end{itemize}
+
+\paragraph{Average disorder}
+\begin{math}
+  Average(disorder) =
+  \sum_{b}{\frac{n_b}{n_t} \sum_{c}{-\frac{n_{bc}}{n_b}\log_{2}\frac{n_{bc}}{n_b}}}
+\end{math}
+where:
+\begin{itemize}
+  \item $n_b$ is the number of samples in brench $b$
+  \item $n_t$ is the total number of samples in all branches
+  \item $n_bc$ is the total of samples in branch $b$ of class $c$
+\end{itemize}
+
+To generate an identification tree using SPROUTER:
+\begin{itemize}
+  \item Until each leaf node is populated by as homogeneous a
+    sample set as possible:
+    \begin{itemize}
+      \item Select a leaf node with an inhomogeneous sample set
+      \item Replace that leaf node by a test node that divides the
+        inhomogeneous sample set into minimally inhomogeneous
+        subsets, according to some measure of disorder
+    \end{itemize}
+\end{itemize}
+
+To convers an identification tree into a rule set, execute the
+following procedure - PRUNER:
+\begin{itemize}
+  \item Create one rule for each root-to-leaf path in the
+    identification tree
+  \item Simplify each rule by discarding antecedents that have no
+    effect on the conclusion reached by the rule
+  \item Replace those rules that share the most common consequent
+    by a default rule that is triggered when no other rule is
+    triggered. In the eventi of a tie, use some heuristic tie
+    breaker to choose a default rule
+\end{itemize}
+

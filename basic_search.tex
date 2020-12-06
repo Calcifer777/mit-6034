@@ -1,0 +1,160 @@
+\section{Nets and Basic Search}
+
+A \textbf{search tree} is a representation, that is a semantic tree, in which:
+\begin{itemize}
+  \item Nodes denote paths
+  \item Branches connect paths to one-set path extensions
+\end{itemize}
+With writers that:
+\begin{itemize}
+  \item Connect a path to a path description
+\end{itemize}
+WIth reades that:
+\begin{itemize}
+  \item Produce a path's description
+\end{itemize}
+
+Each child denotes a path that is a one-city extension of the path denoted by its parent.
+
+If a node has \textit{b} children, it is said to have a \textbf{branching}
+factor of \textit{b}. If the number of children is always \textit{b}
+for every nonleaf node, the the tree is said to have a branching 
+factor of \textit{b}.
+
+Each path that does not reach the goal is called a \textbf{partial path}.
+Each path that does reach the goal is called a \textbf{complete path},
+and the corresponding node is called a \textbf{goal node}.
+
+Nodes are said to be \textbf{open} until they can be expanded,
+whereupon they become \textbf{closed}.
+
+\subsection{Blind methods}
+
+\subsubsection{Depth-first Search}
+
+\begin{itemize}
+  \item Form a one-element queue consisting of a zero-length path
+    that contains only the root node
+  \item Until the first path in the queue terminates at the goal node or the queue is empty,
+    \begin{itemize}
+      \item Remove the first path from the queue; create new paths
+        by extending the first path to all the neighbors of the 
+        terminal node
+      \item Reject all new paths with loops
+      \item Add the new paths, if any to the \textbf{front} of the queue
+    \end{itemize}
+  \item If the goal node is found, annouce success; otherwise, annouce 
+    failure
+\end{itemize}
+
+Good when you are confident that all partial paths either reach dead ends
+or become complete paths after a reasonable number of steps.
+
+Bad with long or infinite paths, that neither reach dead ends 
+nor become complete paths.
+
+\subsubsection{Breadth-first Search}
+
+\begin{itemize}
+  \item Form a one-element queue consisting of a zero-length path
+    that contains only the root node
+  \item Until the first path in the queue terminates at the goal node 
+    or the queue is empty,
+    \begin{itemize}
+      \item Remove the first path from the queue; create new paths
+        by extending the first path to all the neighbors of the 
+        terminal node
+      \item Reject all new paths with loops
+      \item Add the new paths, if any to the \textbf{back} of the queue
+    \end{itemize}
+  \item If the goal node is found, annouce success; otherwise, annouce 
+    failure
+\end{itemize}
+
+
+Works with trees with infinitely deep paths.
+
+Wasteful when all paths lead to the goal node at more or less the same depth.
+
+\subsubsection{Nondeterministic search}
+
+\begin{itemize}
+  \item Form a one-element queue consisting of a zero-length path
+    that contains only the root node
+  \item Until the first path in the queue terminates at the goal node 
+    or the queue is empty,
+    \begin{itemize}
+      \item Remove the first path from the queue; create new paths
+        by extending the first path to all the neighbors of the 
+        terminal node
+      \item Reject all new paths with loops
+      \item Add the new paths \textbf{at random places in the queue}
+    \end{itemize}
+  \item If the goal node is found, annouce success; otherwise, annouce 
+    failure
+\end{itemize}
+
+\subsection{Heuristically informed methods}
+
+\subsubsection{Hill climbing}
+
+\begin{itemize}
+  \item Form a one-element queue consisting of a zero-length path
+    that contains only the root node
+  \item Until the first path in the queue terminates at the goal node 
+    or the queue is empty,
+    \begin{itemize}
+      \item Remove the first path from the queue; create new paths
+        by extending the first path to all the neighbors of the 
+        terminal node
+      \item Reject all new paths with loops
+      \item \textbf{Sort the new paths, if any, by the estimated distances 
+        between their terminal nodes and the goal}
+      \item Add the new paths, if any to the \textbf{front} of the queue
+    \end{itemize}
+  \item If the goal node is found, annouce success; otherwise, annouce 
+    failure
+\end{itemize}
+
+Possible issues:
+\begin{itemize}
+  \item Foothills: an optimal point is found, but it is a local maximum
+  \item Plateaus: for all but a small number of positions, all standard-step
+    probes leave the quality measurement unchanged
+  \item Ridges
+\end{itemize}
+
+\subsubsection{Beam search}
+
+Like BFS in that ir progresses level by level. Unlike BFS, beam 
+search moves downward only through the best \textit{w} 
+nodes at each level; the other nodes are ignored.
+
+\subsubsection{Beast-first search}
+
+While hill climbing demands forward motion from the most recently created
+open node. In the best-first seach, \textbf{forward motion is 
+from the best open node so far} no matter where that node is i the
+partially developed tree.
+
+\subsection{Which search type is good for me?}
+\begin{itemize}
+  \item Depth-first search is good when unproductive partial
+    paths are never too long
+  \item Breadth-first search is good when the branching 
+    factor is never too large
+  \item Nondeterministic search is good when you are not sure whether
+    depth-first search or breadth-first search would be better
+  \item Hill climbing is good when there is a natural measurement
+    of goal distance form each place to the goal and a good path is 
+    likely to be among the partial paths that appear to be good at
+    all levels
+  \item Beam search is good when there is a natural measure of
+    goal distance and a good path is likely to be among the 
+    partial paths that appear to be good at all levels
+  \item Best-first search is good when there is a natural measure 
+    of the goal distance and a good partial path may look like
+    a bad option before more promising partial paths are played
+    out
+\end{itemize}
+

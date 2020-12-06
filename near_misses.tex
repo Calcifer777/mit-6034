@@ -1,0 +1,126 @@
+\section{Near Misses and Felicity Conditions}
+
+
+\paragraph{Near miss} A \textit{near miss} is a negative example
+that, for a small number of reasons, is not an instance of the
+class being taught.
+
+\subsection{Heuristics list}
+\begin{itemize}
+  \item The \textbf{require-link} heuristic is used when an
+    evolving model has a link in a place where a near miss does
+    not. The model link is converted to a \textit{Must} form
+  \item The \textbf{forbid-link} heuristic is used when a near miss
+    has a link in a place where and evolving model does not. A
+    \textit{Must-not} form is installed in te evolving model
+  \item The \textbf{climb-tree} heuristic is used when an object in
+    an evolving model corresponds to a different object in an
+    example. \textit{Must-be-a} links are routed to the most
+    specific common class in the classification tree above the
+    model object and the example object
+  \item The \textbf{enlarge-set} heuristic is used when an object
+    in an evolving model corresponds to a different object in an
+    example and the two objexts are not related to each other
+    through a classification tree. \textit{Must-be-a} links are
+    routed to a new class composed of the union of the objects'
+    classes
+  \item The \textbf{drop-link} heuristic is used when the objects
+    that are different in an evolving model and in ana example form
+    an exhaustive set. The drop-link heuristic is also used when
+    an evolving model has a link that is not in the example. The
+    link is dropped from the model
+  \item The \textbf{close-interval} heuristic is used when a number
+    or interval in an evolving model corresponds to a number in an
+    example. If the model uses a number, the number is replaced by
+    an interval spanning the model's number and the example's
+    number. If the model uses an interval, the interval is enlarged
+    to read the example's number
+\end{itemize}
+
+\subsection{Procedures}
+
+\paragraph{SPECIALIZE}
+\begin{itemize}
+  \item Match the evolving model to the example to establish
+    correspondences among parts
+  \item Determine whether there is a single, most important
+    difference between the evolving model and the near miss
+  \begin{itemize}
+    \item If there is a single, most important difference,
+      \begin{itemize}
+        \item If the evolving model has a link that is not in the
+          near miss, use the require-link heuristic
+        \item If the near miss has a link that is not in the model,
+          use the forbid-link heuristic
+      \end{itemize}
+    \item Otherwise, ignore the example
+  \end{itemize}
+\end{itemize}
+
+\paragraph{GENERALIZE}
+\begin{itemize}
+  \item Match the evolving model to the example to establish
+    correspondences among parts
+  \item For each difference, determine the difference type:
+    \begin{itemize}
+      \item If a link points to a class in the evolving model
+        different from the class to which the link points in the
+        example:
+        \begin{itemize}
+          \item If the classes are part of a class tree, use the
+            climb-tree heuristic
+          \item If the classes for an exhaustive set, use the
+            drop-link heuristic
+          \item Otherwise, use the enlarge-set heuristic
+        \end{itemize}
+      \item If a link is missing in the exmaple, use the drop-link
+        heuristic
+      \item If the difference is that different numbers, or an
+        interval and a number out the interval, are involved, use
+        the close-interval heuristic
+      \item Otherwise, ignore the difference
+    \end{itemize}
+\end{itemize}
+
+Notes:
+\begin{itemize}
+  \item Specialize does nothing if it cannot identify a most
+    important difference. You need a procedure that ranks all
+    differes by difference type and by link type
+  \item Both SPECIALIZE and GENERALIZE involve matching. You need a
+    matching procedure
+\end{itemize}
+
+\subsection{Learning}
+
+To learn using procedure W:
+\begin{itemize}
+  \item Let the description of the first example, which must be an
+    example, be the initial description
+  \item For all subsection examples:
+    \begin{itemize}
+      \item If the example is a near miss, use SPECIALIZE
+      \item If the example is an example, use GENERALIZE
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Wait-and-see principle} If there is doubt about 
+what to do, do nothing.
+
+Learning-facilitating teacher-student agreements are called
+\textbf{felicity conditions}.
+
+\paragraph{No-altering principle} When an object ir situation known
+to be an example fails to match a general model, create a
+special-case exception model.
+
+\subsection{Identification}
+
+\paragraph{Similarity net} A similarity net is a representation
+that is a semantic net in which:
+\begin{itemize}
+  \item Nodes denotes models
+  \item Links connect similar models
+  \item Links are tied to difference descriptions
+\end{itemize}
+

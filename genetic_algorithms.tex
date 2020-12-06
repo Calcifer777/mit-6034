@@ -1,0 +1,78 @@
+\section{Genetic Algorithms}
+
+\paragraph{Chromosome} A chromosome is a representation in which:
+\begin{itemize}
+  \item There is a list of lements called genes
+  \item The chromosome determines the overall fitness manifested by
+    some mechanism that uses the chromosome's genes as a sort of
+    blueprint
+\end{itemize}
+With constructors that:
+\begin{itemize}
+  \item Create a chromosome, given a list of elements; this
+    constructor might be called the \textit{genesis constructor}
+  \item Create a chromosome by crossing a pair of existing
+    chromosomes
+\end{itemize}
+With writers that:
+\begin{itemize}
+  \item Mutate an existing chromosome by changing one of the genes
+\end{itemize}
+With readers that:
+\begin{itemize}
+  \item Produce a specified gene, given a chromosome
+\end{itemize}
+
+\subsection{Fitness}
+
+The \textbf{standard method} for fitness computation is:
+\begin{math}
+  f_i = \frac{q_i}{\sum_{j}{q_j}}
+\end{math}
+
+The \textbf{rank method} for fitness computation is:
+\begin{itemize}
+  \item Sort the $n$ individuals by quality
+  \item Let the probability of selecting the $i$th candidate, given
+    that the first $i-1$ candidates have not been selected, be $p$,
+    except for the final candidate, which is selected if no
+    previous candidate has been selected
+  \item Select a candidate using the computed probabilities
+\end{itemize}
+
+The \textbf{rank-space method} for fitness computation is:
+\begin{itemize}
+  \item Sort the $n$ individuals by quality
+  \item Sort the $n$ individuals by the sum of their inverse
+    squared distances to already selected candidates (the lower the
+    sum, the better the rank)
+  \item Use the rank method, but sort on the sum of the quality
+    rank and the diversity rank, rather than on quality rank only
+\end{itemize}
+
+\subsection{Crossover}
+
+\begin{itemize}
+  \item Crossover enables to search high-dimensional spaces efficiently; 
+it reduces the dimensionality of the optimum search space
+  \item Crossover enables genetic algorithms to travers obstructing
+    moats
+\end{itemize}
+
+\subsection{Natural selection}
+
+To mimic natural selection in general:
+\begin{itemize}
+  \item Create an initial population of one chromosome
+  \item Mutate one or more genes in one or more of the current
+    chromosomes, producitng one new offspring for each chromosome
+    mutated
+  \item Mate one or more pairs of chromosomes
+  \item Add the mutated na doffspring chromosomes to the current
+    population
+  \item Create a new generation by keeping the best of the current
+    population's chromosomes, along with other chromosomes selected
+    randomly from the current population. Bias the random selection
+    according to assessed fitness
+\end{itemize}
+

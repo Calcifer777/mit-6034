@@ -1,0 +1,75 @@
+\section{K-D Trees and Nearest Neighbors}
+
+\paragraph{Consistency heuristic} Whenever you want to guess a
+property of something, given nothing else to go on but a set of
+reference cases, find the most similar case, as measured by known
+properties, for which the property is known. Guess that the
+unknown property is the same as that known property.
+
+\paragraph{Decision tree} A decision tree is a representation,
+that is a semantic tree in which:
+\begin{itemize}
+  \item Each node is connected to a set of possible answers
+  \item Each nonleaf noed is connected to a test that splits its
+    set of possible answers into subsets corresponding to
+    different test results
+  \item Each branch carries a particular test result's subset to
+    another node
+\end{itemize}
+
+\paragraph{k-d tree} A k-d tree is a representation,
+that is a decision tree in which:
+\begin{itemize}
+  \item The set of possible answers consists of points, one of
+    which may be the nearest neighbor to a given point
+  \item Each test specifies a coordinate, a threshold, and a
+    neutral zone around the threshold containing no points
+  \item Each test divides a set of points into two sets, according
+    to on which sid of the threshold each point lies
+\end{itemize}
+
+How to divide the cases into sets:
+\begin{itemize}
+  \item If there is only one case, stop
+  \item If this is the first division of cases, pick the vertical
+    axis for comparison; otherwise, pick the axis that is
+    different from the axis at the next higher level
+  \item Considering only the axis of comparison, find the average
+    position of the two middle objects. Call this average position
+    the threshold, and construct a decision-tree test that
+    compares unknowns in the axis of comparison againsts the
+    threshold. Also note the position of the two middle obkects in
+    the axis of comparison. Call these positions the upper and
+    lower boundaries
+  \item Divide up all the obects into two subsets, accorting to on
+    which side of the average position they lies
+  \item Divide up thw objects in each subset, forming a subtree
+    for each, using this procedure
+\end{itemize}
+
+To find the nearest neighbor using the K-D procedure:
+\begin{itemize}
+  \item Determine whether there is only one element in the set
+    under consideration
+  \begin{itemize}
+    \item If there is only one, report it
+    \item Otherwise, compare the unknown, in the axis of
+      comparison, against the current node's threshold. The result
+      determines the likely set
+    \item Find the nearest neighbor in the likely set using this
+      procedure
+    \item Determine whether the distance to the nearest neighbor
+      in the likely set is less than or equal to the distance to
+      the other set's boundary in the axis of comparison:
+      \begin{itemize}
+        \item If it is, then report the nearest neighbor in the
+          likely set
+        \item If it is not, check the unlikely set using this
+          procedure; return the nearer of the nearest neighbors in
+          the likely set and in the unlikely set
+      \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+
+

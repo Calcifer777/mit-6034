@@ -1,0 +1,101 @@
+\section{Neural Nets}
+
+\paragraph{Neural Net} A neural net is a representation, that is a
+arithmetic constraint net in which:
+\begin{itemize}
+  \item Operation frames denote arithmetic constraints modeling
+    synapses and neurons
+  \item Demon procedures propagate stimuli through synapses and
+    neurons
+\end{itemize}
+With demon procedures defines assignment:
+\begin{itemize}
+  \item When a value is written into a synapse's input slot, write
+    the product of the value and the synapse's weight into the
+    synapse's output slot
+  \item When a value is written into a synapse's output slot,
+    check the following neuron to see whether all its input
+    synapses' outputs have values:
+    \begin{itemize}
+      \item If they do, add the outputs values of the input
+        synapses together, pass the sum through the activation
+        function, and write the appropriate value into the
+        neuron's output slot
+      \item If they don't, do nothing
+    \end{itemize}
+\end{itemize}
+
+To do back propagation to train a neural net:
+\begin{itemize}
+  \item Pick a rate parameter $r$
+  \item Until performance is satisfactory,
+    \begin{itemize}
+      \item For each input,
+        \begin{itemize}
+          \item Compute the resulting output
+          \item Compute $\beta$ for nodes in the output layers
+            using $\beta_{x} = d_x - o_x$
+          \item Compute $\beta$ for all other nodes using:
+            \begin{math}
+              \beta_j = \sum_{k}{w_{jk}o_k(1-o_k)\beta_k}
+            \end{math}
+          \item Compute weight changes for all weight using:
+            \begin{math}
+              \Delta{w_{ij}} = ro_io_k(1-o_k)\beta_j
+            \end{math}
+        \end{itemize}
+      \item Add up the weight changes to all sample inputs and
+        changes the weights
+    \end{itemize}
+\end{itemize}
+
+\subsection{Back-propagation characteristics}
+
+\begin{itemize}
+  \item Training may require thousands of back propagations
+  \item Back-propagation can be done in stages
+  \item Back-propagation can train a net to learn to recognize
+    multiple concepts simultaneously
+  \item Trained neural nets can make predictions
+  \item Excess weights lead to overfitting. Rule of thumb: be sure
+    that the number of trainable weights influencing any
+    particular output is smaller than the number of training
+    samples
+  \item Neural-bet training is an article
+\end{itemize}
+
+\subsection{Perceptrons}
+
+\paragraph{Perceptron} A perceptron is a representation, that is a
+neural net in which:
+\begin{itemize}
+  \item There is only one neuron
+  \item The input sare binary
+  \item Logic boxes may be interposed between the perceptron's
+    inputs and the perceptron's weights. Each logic box can be
+    viewed as a table that produces an output value of 0s or 1 for
+    each combination os 0s and 1s that can appear at its inputs
+  \item The output of the perceptron is 0s or 1 depending on
+    whether the weighted sum of the logic-box outputs is greater
+    than the threshold.
+\end{itemize}
+
+The perceptron convergence procedure guarantees success whenever
+success is possible.
+
+To train a perceptron:
+\begin{itemize}
+  \item Until the perceptron yields the correct result for each
+    training sample, for each sample,
+    \begin{itemize}
+      \item If the perceptron yields the wrong answer,
+        \begin{itemize}
+          \item If the perceptron says no when it should say yes,
+            add the logic-box output vector to the weight vector
+          \item Otherwise, subtract the logic-box output vector
+            from the weight vector
+        \end{itemize}
+      \item Otherwise, do nothing
+    \end{itemize}
+\end{itemize}
+
