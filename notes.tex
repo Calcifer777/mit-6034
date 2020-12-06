@@ -793,6 +793,212 @@ To train a perceptron:
     \end{itemize}
 \end{itemize}
 
+\section{Genetic Algorithms}
+
+\paragraph{Chromosome} A chromosome is a representation in which:
+\begin{itemize}
+  \item There is a list of lements called genes
+  \item The chromosome determines the overall fitness manifested by
+    some mechanism that uses the chromosome's genes as a sort of
+    blueprint
+\end{itemize}
+With constructors that:
+\begin{itemize}
+  \item Create a chromosome, given a list of elements; this
+    constructor might be called the \textit{genesis constructor}
+  \item Create a chromosome by crossing a pair of existing
+    chromosomes
+\end{itemize}
+With writers that:
+\begin{itemize}
+  \item Mutate an existing chromosome by changing one of the genes
+\end{itemize}
+With readers that:
+\begin{itemize}
+  \item Produce a specified gene, given a chromosome
+\end{itemize}
+
+\subsection{Fitness}
+
+The \textbf{standard method} for fitness computation is:
+\begin{math}
+  f_i = \frac{q_i}{\sum_{j}{q_j}}
+\end{math}
+
+The \textbf{rank method} for fitness computation is:
+\begin{itemize}
+  \item Sort the $n$ individuals by quality
+  \item Let the probability of selecting the $i$th candidate, given
+    that the first $i-1$ candidates have not been selected, be $p$,
+    except for the final candidate, which is selected if no
+    previous candidate has been selected
+  \item Select a candidate using the computed probabilities
+\end{itemize}
+
+The \textbf{rank-space method} for fitness computation is:
+\begin{itemize}
+  \item Sort the $n$ individuals by quality
+  \item Sort the $n$ individuals by the sum of their inverse
+    squared distances to already selected candidates (the lower the
+    sum, the better the rank)
+  \item Use the rank method, but sort on the sum of the quality
+    rank and the diversity rank, rather than on quality rank only
+\end{itemize}
+
+\section{Crossover}
+
+\begin{itemize}
+  \item Crossover enables to search high-dimensional spaces efficiently; 
+it reduces the dimensionality of the optimum search space
+  \item Crossover enables genetic algorithms to travers obstructing
+    moats
+\end{itemize}
+
+\subsection{Natural selection}
+
+To mimic natural selection in general:
+\begin{itemize}
+  \item Create an initial population of one chromosome
+  \item Mutate one or more genes in one or more of the current
+    chromosomes, producitng one new offspring for each chromosome
+    mutated
+  \item Mate one or more pairs of chromosomes
+  \item Add the mutated na doffspring chromosomes to the current
+    population
+  \item Create a new generation by keeping the best of the current
+    population's chromosomes, along with other chromosomes selected
+    randomly from the current population. Bias the random selection
+    according to assessed fitness
+\end{itemize}
+
+\section{Near Misses and Felicity Conditions}
+
+
+\paragraph{Near miss} A \textit{near miss} is a negative example
+that, for a small number of reasons, is not an instance of the
+class being taught.
+
+\subsection{Heuristics list}
+\begin{itemize}
+  \item The \textbf{require-link} heuristic is used when an
+    evolving model has a link in a place where a near miss does
+    not. The model link is converted to a \textit{Must} form
+  \item The \textbf{forbid-link} heuristic is used when a near miss
+    has a link in a place where and evolving model does not. A
+    \textit{Must-not} form is installed in te evolving model
+  \item The \textbf{climb-tree} heuristic is used when an object in
+    an evolving model corresponds to a different object in an
+    example. \textit{Must-be-a} links are routed to the most
+    specific common class in the classification tree above the
+    model object and the example object
+  \item The \textbf{enlarge-set} heuristic is used when an object
+    in an evolving model corresponds to a different object in an
+    example and the two objexts are not related to each other
+    through a classification tree. \textit{Must-be-a} links are
+    routed to a new class composed of the union of the objects'
+    classes
+  \item The \textbf{drop-link} heuristic is used when the objects
+    that are different in an evolving model and in ana example form
+    an exhaustive set. The drop-link heuristic is also used when
+    an evolving model has a link that is not in the example. The
+    link is dropped from the model
+  \item The \textbf{close-interval} heuristic is used when a number
+    or interval in an evolving model corresponds to a number in an
+    example. If the model uses a number, the number is replaced by
+    an interval spanning the model's number and the example's
+    number. If the model uses an interval, the interval is enlarged
+    to read the example's number
+\end{itemize}
+
+\subsection{Procedures}
+
+\paragraph{SPECIALIZE}
+\begin{itemize}
+  \item Match the evolving model to the example to establish
+    correspondences among parts
+  \item Determine whether there is a single, most important
+    difference between the evolving model and the near miss
+  \begin{itemize}
+    \item If there is a single, most important difference,
+      \begin{itemize}
+        \item If the evolving model has a link that is not in the
+          near miss, use the require-link heuristic
+        \item If the near miss has a link that is not in the model,
+          use the forbid-link heuristic
+      \end{itemize}
+    \item Otherwise, ignore the example
+  \end{itemize}
+\end{itemize}
+
+\paragraph{GENERALIZE}
+\begin{itemize}
+  \item Match the evolving model to the example to establish
+    correspondences among parts
+  \item For each difference, determine the difference type:
+    \begin{itemize}
+      \item If a link points to a class in the evolving model
+        different from the class to which the link points in the
+        example:
+        \begin{itemize}
+          \item If the classes are part of a class tree, use the
+            climb-tree heuristic
+          \item If the classes for an exhaustive set, use the
+            drop-link heuristic
+          \item Otherwise, use the enlarge-set heuristic
+        \end{itemize}
+      \item If a link is missing in the exmaple, use the drop-link
+        heuristic
+      \item If the difference is that different numbers, or an
+        interval and a number out the interval, are involved, use
+        the close-interval heuristic
+      \item Otherwise, ignore the difference
+    \end{itemize}
+\end{itemize}
+
+Notes:
+\begin{itemize}
+  \item Specialize does nothing if it cannot identify a most
+    important difference. You need a procedure that ranks all
+    differes by difference type and by link type
+  \item Both SPECIALIZE and GENERALIZE involve matching. You need a
+    matching procedure
+\end{itemize}
+
+\subsection{Learning}
+
+To learn using procedure W:
+\begin{itemize}
+  \item Let the description of the first example, which must be an
+    example, be the initial description
+  \item For all subsection examples:
+    \begin{itemize}
+      \item If the example is a near miss, use SPECIALIZE
+      \item If the example is an example, use GENERALIZE
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Wait-and-see principle} If there is doubt about 
+what to do, do nothing.
+
+Learning-facilitating teacher-student agreements are called
+\textbf{felicity conditions}.
+
+\paragraph{No-altering principle} When an object ir situation known
+to be an example fails to match a general model, create a
+special-case exception model.
+
+\subsection{Identification}
+
+\paragraph{Similarity net} A similarity net is a representation
+that is a semantic net in which:\begin{itemize}
+  \item Nodes denotes models
+  \item Links connect similar models
+  \item Links are tied to difference descriptions
+\end{itemize}
+
+
+
+
 
 
 
